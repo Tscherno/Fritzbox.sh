@@ -1,0 +1,43 @@
+table#fritz {
+    color: black;
+    background: #fff;
+    border: 1px solid #b4b4b4;
+    font: bold 17px helvetica;
+    padding: 0;
+    margin-top:10px;
+    width: 100%;
+    -webkit-border-radius: 8px;
+}
+     
+table#fritz tr td {
+    color: #666;
+    border-bottom: 1px solid #b4b4b4;
+    border-right: 1px solid #b4b4b4;
+    padding: 10px 10px 10px 10px;
+    background-image: -webkit-linear-gradient(top, #fdfdfd, #eee);
+}
+         
+table#fritz tr td:last-child {
+    border-right: none;
+}
+
+table#fritz tr:last-child td {
+    border-bottom: none;
+}
+
+table#fritz .fritz_1, table#fritz .fritz_2, table#fritz .fritz_3, table#fritz .fritz_4 {
+	background-repeat:no-repeat;
+	background-position:center center;
+}
+table#fritz .fritz_1 {
+	background-image:url('../webmatic_user/fritz_1.png');
+}
+table#fritz .fritz_2 {
+	background-image:url('../webmatic_user/fritz_2.png');
+}
+table#fritz .fritz_3 {
+	background-image:url('../webmatic_user/fritz_3.png');
+}
+table#fritz .fritz_4 {
+	background-image:url('../webmatic_user/fritz_4.png');
+}

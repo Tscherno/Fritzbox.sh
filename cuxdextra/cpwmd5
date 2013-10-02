@@ -1,0 +1,9 @@
+#!/bin/tclsh
+package require md5
+proc md5 {str} {
+  string tolower [::md5::md5 -hex $str]
+}
+proc utf16 {str} {
+  encoding convertto unicode $str
+}
+puts [md5 [utf16 [lindex $argv 0]]]
