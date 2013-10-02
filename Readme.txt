@@ -1,4 +1,3 @@
-
 Installation:
 0. Vorraussetzung:
    cuxd ist auf der Homematic installiert (min 0.58)
