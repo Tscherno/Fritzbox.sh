@@ -181,6 +181,8 @@ case $1 in
 					PerformPOST "telcfg:settings/Diversity$2/Active=$3&sid=$SID" "POST";;	
 	"ANRUFEN") 		LOGIN 
 					PerformPOST "telcfg:command/Dial=$2&sid=$SID" "POST";;
+	"UMTS") 		LOGIN 
+					PerformPOST "umts:settings/enabled=$2&sid=$SID" "POST";;	
 	"DECT200")		LOGIN
 					PerformPOST "sid=$SID&command=SwitchOnOff&id=$2&value_to_set=$3&xhr=1" "POST" "/net/home_auto_query.lua" "DECTCOMMAND0.txt";;
 	"DECT200Status") LOGIN
@@ -233,6 +235,7 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANGast [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANNacht [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT [0|1] \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh UMTS [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh NACHTRUHE [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh KLINGELSPERRE [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh ANRUFEN [(Telefonnummer z.B. **610)] \n"
