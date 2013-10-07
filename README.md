@@ -4,7 +4,7 @@ Das Script Fritzbox.sh ist dazu gedacht eine eQ3 Homematic CCU mit ein AVM Fritz
 Es basiert auf dem Script das im Homematic-Forum hier gepostet wurde:
 http://homematic-forum.de/forum/viewtopic.php?f=37&t=13242
 
-##Vorraussetzung
+##Voraussetzung
 
    + cuxd ist auf der Homematic installiert (min 0.58)
    + Die FritzBox hat min Version Fritz!OS 5.50 (neuen Loginverfahren)
