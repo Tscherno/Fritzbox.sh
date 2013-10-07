@@ -248,7 +248,7 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLAN5 [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANGast [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANNacht [0|1] \n"
-					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANAnwesend [Name des WLAN Gerätes] [Name der logischen Variable (wahr/falsch)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANAnwesend [Name des WLAN Geraetes] [Name der logischen Variable (wahr/falsch)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh UMTS [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh NACHTRUHE [0|1] \n"
