@@ -2,6 +2,7 @@
 # FritzBox.sh
 # Version 0.5.1
 # https://github.com/Tscherno/Fritzbox.sh
+# added wifi presence
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
@@ -169,6 +170,19 @@ case $1 in
 					PerformPOST "wlan:settings/guest_ap_enabled=$2&sid=$SID" "POST";;
 	"WLANNacht")	LOGIN
 					PerformPOST "wlan:settings/night_time_control_no_forced_off=$2&sid=$SID" "POST";;
+	"WLANAnwesend") LOGIN
+					Debugmsg=$Debugmsg"$FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
+					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "online = 1" -B1 | grep name | sed -e 's/name =//' -e 's/,//')
+					anwesenheit1=$(echo $anwesenheit | grep "$2" )
+					if [ "$anwesenheit1" != "" ]; then
+						Debugmsg=$Debugmsg"erkannt\n"
+						$WEBCLIENT "http://127.0.0.1:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+					else
+						Debugmsg=$Debugmsg"nicht erkannt\n"
+						$WEBCLIENT "http://127.0.0.1:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+					fi
+					Debugmsg=$Debugmsg"Alle Anwesenden: $anwesenheit \n"
+					;;
 	"DECT")			LOGIN
 					PerformPOST "dect:settings/enabled=$2&sid=$SID" "POST";;	
 	"NACHTRUHE") 	LOGIN
@@ -218,7 +232,7 @@ case $1 in
 							dauer=`echo "$line" | cut -f7 -d';'`
 							out=$out"<tr><td class='fritz_"$typ"'/><td>"$datum"</td><td>"$name"</td><td>"$rufnummer"</td><td>"$nebenstelle"</td><!--<td>"$eigene"</td>--><td>"$dauer"</td></tr>"
 						fi
-						count=`expr $count + 1`
+						count=`expr $count + 1` 
 					done < $ANRUFLIST
 					out=$out"</table>"
 					urlencode=$(echo "$out" | sed -e 's/%/%25/g' -e 's/ /%20/g' -e 's/!/%21/g' -e 's/"/%22/g' -e 's/#/%23/g' -e 's/\$/%24/g' -e 's/\&/%26/g' -e 's/'\''/%27/g' -e 's/(/%28/g' -e 's/)/%29/g' -e 's/\*/%2a/g' -e 's/+/%2b/g' -e 's/,/%2c/g' -e 's/-/%2d/g' -e 's/\./%2e/g' -e 's/\//%2f/g' -e 's/:/%3a/g' -e 's/;/%3b/g' -e 's//%3e/g' -e 's/?/%3f/g' -e 's/@/%40/g' -e 's/\[/%5b/g' -e 's/\\/%5c/g' -e 's/\]/%5d/g' -e 's/\^/%5e/g' -e 's/_/%5f/g' -e 's/`/%60/g' -e 's/{/%7b/g' -e 's/|/%7c/g' -e 's/}/%7d/g' -e 's/~/%7e/g')
@@ -234,6 +248,7 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLAN5 [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANGast [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANNacht [0|1] \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANAnwesend [Name des WLAN Gerätes] [Name der logischen Variable (wahr/falsch)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh UMTS [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh NACHTRUHE [0|1] \n"
