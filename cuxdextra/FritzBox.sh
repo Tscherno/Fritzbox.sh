@@ -1,8 +1,7 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.5.1
+# Version 0.6.0
 # https://github.com/Tscherno/Fritzbox.sh
-# added wifi presence
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
@@ -24,7 +23,7 @@ WEBCLIENT="../curl -s"
 # Wohin soll geloggt werden
 Debug=""
 # Alle Debugnachrichten Nachrichten
-Debugmsg="FritzBox.sh 0.5.1  \n"
+Debugmsg="FritzBox.sh 0.6.0  \n"
 
 FritzBoxURL="http://fritz.box"
 Username=""
