@@ -24,7 +24,7 @@ WEBCLIENT="../curl -s"
 # Wohin soll geloggt werden
 Debug=""
 # Alle Debugnachrichten Nachrichten
-Debugmsg="FritzBox.sh 0.4  \n"
+Debugmsg="FritzBox.sh 0.5.1  \n"
 
 FritzBoxURL="http://fritz.box"
 Username=""
@@ -195,6 +195,8 @@ case $1 in
 					PerformPOST "telcfg:settings/Diversity$2/Active=$3&sid=$SID" "POST";;	
 	"ANRUFEN") 		LOGIN 
 					PerformPOST "telcfg:command/Dial=$2&sid=$SID" "POST";;
+	"UMTS") 		LOGIN 
+					PerformPOST "umts:settings/enabled=$2&sid=$SID" "POST";;	
 	"DECT200")		LOGIN
 					PerformPOST "sid=$SID&command=SwitchOnOff&id=$2&value_to_set=$3&xhr=1" "POST" "/net/home_auto_query.lua" "DECTCOMMAND0.txt";;
 	"DECT200Status") LOGIN
@@ -248,6 +250,7 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANNacht [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANAnwesend [Name des WLAN Gerätes] [Name der logischen Variable (wahr/falsch)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT [0|1] \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh UMTS [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh NACHTRUHE [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh KLINGELSPERRE [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh ANRUFEN [(Telefonnummer z.B. **610)] \n"
