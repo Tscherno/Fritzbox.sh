@@ -1,7 +1,7 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.5.0
-# https://github.com/Tscherno/Fritzbox.sh
+# Version 0.5.001 Beta
+# https://github.com/Skyb0rg/Fritzbox.sh
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
