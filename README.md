@@ -70,6 +70,7 @@ Folgende Funktionen stehen momentan zur Verfügung:
         WLANNacht [0|1]     
         WLANAnwesend [Name des WLAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable    
         LANAnwesend [Name des LAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh LANAnwesend Geraet CCUVariable   
+        WakeOnLan [Name des LAN Geraetes] - Beispiel: FritzBox.sh WakeOnLan Geraetename   
         DECT [0|1]    
         NACHTRUHE [0|1]    
         KLINGELSPERRE [0|1]    
