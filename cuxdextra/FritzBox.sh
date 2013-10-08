@@ -1,6 +1,6 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.6.0
+# Version 0.6.1
 # https://github.com/Tscherno/Fritzbox.sh
 # ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ WEBCLIENT="../curl -s"
 # Wohin soll geloggt werden
 Debug=""
 # Alle Debugnachrichten Nachrichten
-Debugmsg="FritzBox.sh 0.6.0  \n"
+Debugmsg="FritzBox.sh 0.6.1  \n"
 
 FritzBoxURL="http://fritz.box"
 Username=""
@@ -170,17 +170,30 @@ case $1 in
 	"WLANNacht")	LOGIN
 					PerformPOST "wlan:settings/night_time_control_no_forced_off=$2&sid=$SID" "POST";;
 	"WLANAnwesend") LOGIN
-					Debugmsg=$Debugmsg"$FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
-					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "online = 1" -B1 | grep name | sed -e 's/name =//' -e 's/,//')
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
+					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 1" -B11 | grep "online = 1" -B1 |grep name | sed -e 's/name =//' -e 's/,//')
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
-						Debugmsg=$Debugmsg"erkannt\n"
-						$WEBCLIENT "http://127.0.0.1:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 erkannt\n"
+						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
 					else
-						Debugmsg=$Debugmsg"nicht erkannt\n"
-						$WEBCLIENT "http://127.0.0.1:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 nicht erkannt\n"
+						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
 					fi
-					Debugmsg=$Debugmsg"Alle Anwesenden: $anwesenheit \n"
+					Debugmsg=$Debugmsg"Alle WLAN-Geräte: $anwesenheit \n"
+					;;
+	"LANAnwesend") LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
+					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 0" -B11 | grep "online = 1" -B1 | grep name | sed -e 's/name =//' -e 's/,//')
+					anwesenheit1=$(echo $anwesenheit | grep "$2" )
+					if [ "$anwesenheit1" != "" ]; then
+						Debugmsg=$Debugmsg"LAN-Anwesend: $2 erkannt\n"
+						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+					else
+						Debugmsg=$Debugmsg"LAN-Anwesend: $2 nicht erkannt\n"
+						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+					fi
+					Debugmsg=$Debugmsg"Alle LAN-Geräte: $anwesenheit \n"
 					;;
 	"DECT")			LOGIN
 					PerformPOST "dect:settings/enabled=$2&sid=$SID" "POST";;	
@@ -247,7 +260,8 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLAN5 [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANGast [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANNacht [0|1] \n"
-					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANAnwesend [Name des WLAN Gerätes] [Name der logischen Variable (wahr/falsch)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANAnwesend [Name des WLAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh LANAnwesend [Name des LAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh LANAnwesend Geraet CCUVariable \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh UMTS [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh NACHTRUHE [0|1] \n"
