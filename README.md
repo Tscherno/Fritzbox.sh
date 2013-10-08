@@ -61,7 +61,8 @@ in das Verzeichnis /usr/local/addons/cuxd/extra kopieren.
    nach `/usr/local/etc/config/addons/www/webmatic_user` kopieren
 
 ##Funktionen
-Folgende Funktionen stehen momentan zur Verfügung:
+Folgende Funktionen stehen momentan zur Verfügung:   
+
      ./FritzBox.sh [AKTION] [PARAMETER]
         WLAN [0|1]   
         WLAN5 [0|1]   
