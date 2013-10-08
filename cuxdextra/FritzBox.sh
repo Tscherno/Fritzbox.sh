@@ -1,8 +1,8 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.6.2
+# Version 0.6.3
 # https://github.com/Tscherno/Fritzbox.sh
-# Unix code problem solved
+# WakeOnLan implemented
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
@@ -183,7 +183,7 @@ case $1 in
 					fi
 					Debugmsg=$Debugmsg"Alle WLAN-Geräte: $anwesenheit \n"
 					;;
-	"LANAnwesend") LOGIN
+	"LANAnwesend") 	LOGIN
 					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
 					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 0" -B11 | grep "online = 1" -B1 | grep name | sed -e 's/name =//' -e 's/,//')
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
@@ -195,6 +195,17 @@ case $1 in
 						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
 					fi
 					Debugmsg=$Debugmsg"Alle LAN-Geräte: $anwesenheit \n"
+					;;
+	"WakeOnLan")	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
+					wol=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"name"] = ' -B2 | grep $2 -B2 |grep mac | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' -e 's/mac =//' -e 's/,//' -e 's/^[ \t]*//;s/[ \t]*$//')
+					Debugmsg=$Debugmsg"Debug:"$wol"\n"
+					if [ "$wol" != "" ]; then
+						Debugmsg=$Debugmsg"WOL-MAC: $2 erkannt: $wol\n"
+						./ether-wake $wol
+					else
+						Debugmsg=$Debugmsg"WOL-MAC: $2 nicht erkannt\n"
+					fi
 					;;
 	"DECT")			LOGIN
 					PerformPOST "dect:settings/enabled=$2&sid=$SID" "POST";;	
@@ -263,6 +274,7 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANNacht [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANAnwesend [Name des WLAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh LANAnwesend [Name des LAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh LANAnwesend Geraet CCUVariable \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh WakeOnLan [Name des LAN Geraetes] - Beispiel: FritzBox.sh WakeOnLan Geraetename \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh UMTS [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh NACHTRUHE [0|1] \n"
