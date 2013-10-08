@@ -24,7 +24,7 @@ WEBCLIENT="../curl -s"
 # Wohin soll geloggt werden
 Debug=""
 # Alle Debugnachrichten Nachrichten
-Debugmsg="FritzBox.sh 0.5.1  \n"
+Debugmsg="FritzBox.sh 0.6.1  \n"
 
 FritzBoxURL="http://fritz.box"
 Username=""
@@ -176,10 +176,10 @@ case $1 in
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
 						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 erkannt\n"
-						$WEBCLIENT "http://127.0.0.1:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
 					else
 						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 nicht erkannt\n"
-						$WEBCLIENT "http://127.0.0.1:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
 					fi
 					Debugmsg=$Debugmsg"Alle WLAN-Geräte: $anwesenheit \n"
 					;;
@@ -189,10 +189,10 @@ case $1 in
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
 						Debugmsg=$Debugmsg"LAN-Anwesend: $2 erkannt\n"
-						$WEBCLIENT "http://127.0.0.1:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
 					else
 						Debugmsg=$Debugmsg"LAN-Anwesend: $2 nicht erkannt\n"
-						$WEBCLIENT "http://127.0.0.1:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
 					fi
 					Debugmsg=$Debugmsg"Alle LAN-Geräte: $anwesenheit \n"
 					;;

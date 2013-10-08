@@ -4,7 +4,7 @@ Das Script Fritzbox.sh ist dazu gedacht eine eQ3 Homematic CCU mit ein AVM Fritz
 Es basiert auf dem Script das im Homematic-Forum hier gepostet wurde:
 http://homematic-forum.de/forum/viewtopic.php?f=37&t=13242
 
-##Vorraussetzung
+##Voraussetzung
 
    + cuxd ist auf der Homematic installiert (min 0.58)
    + Die FritzBox hat min Version Fritz!OS 5.50 (neuen Loginverfahren)
@@ -61,20 +61,23 @@ in das Verzeichnis /usr/local/addons/cuxd/extra kopieren.
    nach `/usr/local/etc/config/addons/www/webmatic_user` kopieren
 
 ##Funktionen
-Folgende Funktionen stehen momentan zur Verfügung:
+Folgende Funktionen stehen momentan zur Verfügung:   
 
-        `./FritzBox.sh WLAN [0|1]`   
-        `./FritzBox.sh WLAN5 [0|1]`   
-        `./FritzBox.sh WLANGast [0|1]`    
-        `./FritzBox.sh WLANNacht [0|1]`    
-        `./FritzBox.sh DECT [0|1]`    
-        `./FritzBox.sh NACHTRUHE [0|1]`    
-        `./FritzBox.sh KLINGELSPERRE [0|1]`    
-        `./FritzBox.sh ANRUFEN [(Telefonnummer z.B. **610)]`     
-        `./FritzBox.sh RUFUMLEITUNG [0|1|2|3(Rufumleistung)] [0|1]`     
-        `./FritzBox.sh Diversity [0|1|2|3(Rufumleistung)] [0|1]`     
-        `./FritzBox.sh DECT200 [16|17|18|19] [0|1]`     
-        `./FritzBox.sh DECT200Energie [Nummer des Aktors:16|17|18|19] [Name der Variable in der CCU] - Beispiel: FritzBox.sh DECT200Energie 16 DECT200`     
-        `./FritzBox.sh Anrufliste`     
-        `./FritzBox.sh Anrufliste2CCU [0000(HOMEMATIC Webmatic SYSVAR ID)] [Anzahl Eintraege]`    
-        `./FritzBox.sh reboot`    
+     ./FritzBox.sh [AKTION] [PARAMETER]
+        WLAN [0|1]   
+        WLAN5 [0|1]   
+        WLANGast [0|1]    
+        WLANNacht [0|1]     
+        WLANAnwesend [Name des WLAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable    
+        LANAnwesend [Name des LAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh LANAnwesend Geraet CCUVariable   
+        DECT [0|1]    
+        NACHTRUHE [0|1]    
+        KLINGELSPERRE [0|1]    
+        ANRUFEN [(Telefonnummer z.B. **610)]     
+        RUFUMLEITUNG [0|1|2|3(Rufumleistung)] [0|1]     
+        Diversity [0|1|2|3(Rufumleistung)] [0|1]     
+        DECT200 [16|17|18|19] [0|1]     
+        DECT200Energie [Nummer des Aktors:16|17|18|19] [Name der Variable in der CCU] - Beispiel: FritzBox.sh DECT200Energie 16 DECT200     
+        Anrufliste     
+        Anrufliste2CCU [0000(HOMEMATIC Webmatic SYSVAR ID)] [Anzahl Eintraege]    
+        reboot    
