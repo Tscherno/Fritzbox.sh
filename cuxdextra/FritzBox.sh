@@ -1,8 +1,8 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.6.1
+# Version 0.6.2
 # https://github.com/Tscherno/Fritzbox.sh
-# added lan presence
+# Unix code problem solved
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
