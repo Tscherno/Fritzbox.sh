@@ -64,21 +64,32 @@ in das Verzeichnis /usr/local/addons/cuxd/extra kopieren.
 Folgende Funktionen stehen momentan zur Verfügung:   
 
      ./FritzBox.sh [AKTION] [PARAMETER]
-        WLAN [0|1]   
-        WLAN5 [0|1]   
-        WLANGast [0|1]    
-        WLANNacht [0|1]     
+        WLAN [0|1]  Schaltet WLAN ein bzw. aus 
+        WLAN5 [0|1]   Schaltet 5GHz-WLAN ein bzw. aus
+        WLANGast [0|1]    Schaltet Gast-WLAN ein bzw. aus
+        WLANNacht [0|1]     Schaltet den Nachmodus vom WLAN ein bzw. aus
         WLANAnwesend [Name des WLAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable    
         LANAnwesend [Name des LAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh LANAnwesend Geraet CCUVariable   
         WakeOnLan [Name des LAN Geraetes] - Beispiel: FritzBox.sh WakeOnLan Geraetename   
-        DECT [0|1]    
-        NACHTRUHE [0|1]    
-        KLINGELSPERRE [0|1]    
-        ANRUFEN [(Telefonnummer z.B. **610)]     
-        RUFUMLEITUNG [0|1|2|3(Rufumleistung)] [0|1]     
-        Diversity [0|1|2|3(Rufumleistung)] [0|1]     
-        DECT200 [16|17|18|19] [0|1]     
+        DECT [0|1]    Schaltet DECT ein bzw. aus 
+        UMTS [0|1]    Schaltet UMTS ein bzw. aus 
+        NACHTRUHE [0|1]   Schaltet Nachruhe ein bzw. aus 
+        KLINGELSPERRE [0|1]    Schaltet KLINGELSPERRE ein bzw. aus
+        ANRUFEN [(Telefonnummer z.B. **610)]   Ruf diese Nummer über das Telefon an  
+        RUFUMLEITUNG [0|1|2|3(Rufumleistung)] [0|1]   Konfiguriert eine Rufumleitung  
+        Diversity [0|1|2|3(Rufumleistung)] [0|1]     Konfiguriert eine Rufumleitung
+        DECT200 [16|17|18|19] [0|1]     Schaltet DECT200 Geraete ein bzw. aus
         DECT200Energie [Nummer des Aktors:16|17|18|19] [Name der Variable in der CCU] - Beispiel: FritzBox.sh DECT200Energie 16 DECT200     
-        Anrufliste     
-        Anrufliste2CCU [0000(HOMEMATIC Webmatic SYSVAR ID)] [Anzahl Eintraege]    
-        reboot    
+        Anrufliste     Erstellt eine Anrufliste fuer Webmatic
+        Anrufliste2CCU [0000(HOMEMATIC Webmatic SYSVAR ID)] [Anzahl Eintraege]    Erstellt eine Anrufliste in eine CCU-Variable
+        Status-Rufumleitung [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-Rufumleitung RufumleitungVariableCCU 
+        Status-DECT [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-DECT DECTanausVariableCCU 
+        Status-DECT200 [16|17|18|19] [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-DECT200 16 DECT16VariableCCU  
+        Status-IP [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh SStatus-IP ExterneIPVariableCCU 
+        Status-KLINGELSPERRE [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-KLINGELSPERRE KLINGELSPERREVariableCCU 
+        Status-Verbindung [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-Verbindung InternetverbundenVariableCCU 
+        Status-Verbindungszeit [Name der logischen Variable (Zeichenkette)in der CCU] Beispiel: FritzBox.sh Status-Verbindungszeit InternetVerbindungszeitVariableCCU 
+        Status-WLAN [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-WLAN WLANanausVariableCCU 
+        Status-WLANGast [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh SStatus-WLANGast WLANGastanausVariableCCU 
+        Status-WLANZeitschaltung  [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-WLANZeitschaltung WLANZeitschaltungVariableCCU 
+        reboot    Startet die Fritzbox neu
