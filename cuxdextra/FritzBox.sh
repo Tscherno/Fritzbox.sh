@@ -1,12 +1,12 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.6.3
+# Version 0.7.1
 # https://github.com/Tscherno/Fritzbox.sh
-# WakeOnLan implemented
+# Status-Abfragen + Status WLANGast + IP + ExterneVerbindung + Verbindungszeit
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
-HOMEMATIC="localhost"
+HOMEMATIC="127.0.0.1"
 
 ADDONDIR="/usr/local/addons/cuxd"
 CONFIGFILE="/usr/local/addons/cuxd/extra/FritzBox.conf"
@@ -112,11 +112,15 @@ LOGIN(){
 
 SetCCUVariable(){
 	Debugmsg=$Debugmsg"SetCCUVariable $1 $2 \n"
-	Debugmsg=$Debugmsg"http://$HOMEMATIC:8181/test.exe?Status=dom.GetObject%28%27"$1"%27%29.State%28"$2"%29 \n"
+	if [ "$2" != "" ]; then
+		Debugmsg=$Debugmsg"http://$HOMEMATIC:8181/test.exe?Status=dom.GetObject%28%27$1%27%29.State%28%22$2%22%29 \n"
+		$WEBCLIENT "http://$HOMEMATIC:8181/test.exe?Status=dom.GetObject%28%27$1%27%29.State%28%22$2%22%29"	
+	else
+		Debugmsg=$Debugmsg"SetCCUVariable: Variable nicht gesetzt\n"
+	fi
 	
-	$WEBCLIENT "http://$HOMEMATIC:8181/test.exe?Status=dom.GetObject%28%27"$1"%27%29.State%28"$2"%29"
+	
 }
-
 
 # Lese CONFIGFILE und ersetzen KEY: Value
 eval `sed '/^ *#/d;s/:/ /;' < "$CONFIGFILE" | while read key val
@@ -176,10 +180,10 @@ case $1 in
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
 						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 erkannt\n"
-						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+						SetCCUVariable $3 "1"
 					else
 						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 nicht erkannt\n"
-						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+						SetCCUVariable $3 "0"
 					fi
 					Debugmsg=$Debugmsg"Alle WLAN-Geräte: $anwesenheit \n"
 					;;
@@ -189,10 +193,10 @@ case $1 in
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
 						Debugmsg=$Debugmsg"LAN-Anwesend: $2 erkannt\n"
-						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+						SetCCUVariable $3 "1"
 					else
 						Debugmsg=$Debugmsg"LAN-Anwesend: $2 nicht erkannt\n"
-						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+						SetCCUVariable $3 "0"
 					fi
 					Debugmsg=$Debugmsg"Alle LAN-Geräte: $anwesenheit \n"
 					;;
@@ -262,6 +266,120 @@ case $1 in
 					urlencode=$(echo "$out" | sed -e 's/%/%25/g' -e 's/ /%20/g' -e 's/!/%21/g' -e 's/"/%22/g' -e 's/#/%23/g' -e 's/\$/%24/g' -e 's/\&/%26/g' -e 's/'\''/%27/g' -e 's/(/%28/g' -e 's/)/%29/g' -e 's/\*/%2a/g' -e 's/+/%2b/g' -e 's/,/%2c/g' -e 's/-/%2d/g' -e 's/\./%2e/g' -e 's/\//%2f/g' -e 's/:/%3a/g' -e 's/;/%3b/g' -e 's//%3e/g' -e 's/?/%3f/g' -e 's/@/%40/g' -e 's/\[/%5b/g' -e 's/\\/%5c/g' -e 's/\]/%5d/g' -e 's/\^/%5e/g' -e 's/_/%5f/g' -e 's/`/%60/g' -e 's/{/%7b/g' -e 's/|/%7c/g' -e 's/}/%7d/g' -e 's/~/%7e/g')
 					$WEBCLIENT "http://$HOMEMATIC/addons/webmatic/cgi/set.cgi?id=$2&value=$urlencode"
 					;;
+	"Status-DECT") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/dect/dect_settings.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/dect/dect_settings.lua?sid=$SID" | grep 'name="dect_activ" onclick="onDectActiv()"')
+					if echo $status | grep -q 'name="dect_activ" onclick="onDectActiv()" checked>' ; then 
+						Debugmsg=$Debugmsg"Status-DECT: Dect an\n"
+						SetCCUVariable $2 "1"
+					else
+						Debugmsg=$Debugmsg"Status-DECT: Dect aus\n"
+						SetCCUVariable $2 "0"
+					fi
+					;;
+	"Status-DECT200") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/home_auto_query.lua?sid=$SID&command=AllOutletStates&xhr=0 \n"
+					status=$($WEBCLIENT "$FritzBoxURL/net/home_auto_query.lua?sid=$SID&command=AllOutletStates&xhr=0" | grep 'DeviceSwitchState' | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' -e 's/,//' -e 's/^[ \t]*//;s/[ \t]*$//' | grep -Eo "$2.{52}" | grep -Eo "DeviceSwitchState_*.{5}" | grep -Eo ":.{2}" | sed -e 's/: //')
+					if [ "$status" = "1" ] ; then 
+						Debugmsg=$Debugmsg"Status-DECT: Dect $2 an\n"
+						SetCCUVariable $3 "1"
+					else
+						Debugmsg=$Debugmsg"Status-DECT: Dect $2 aus\n"
+						SetCCUVariable $3 "0"
+					fi
+					;;
+	"Status-IP") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/internet/inetstat_monitor.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/internet/inetstat_monitor.lua?sid=$SID" | grep 'connection0:status/ip')
+					if echo $status | grep -q '"-"' ; then 
+						Debugmsg=$Debugmsg"Status-IP: - \n"
+						SetCCUVariable $2 "-"
+					else
+						ip=$(echo $status |  sed -e 's/= //;s/",//g;s/"*//g;s/\[connection0:status\/ip\]//g')
+						Debugmsg=$Debugmsg"Status-IP: $ip \n"
+						SetCCUVariable $2 $ip
+					fi
+					Debugmsg=$Debugmsg"Status-IP: $ip\n"
+					;;										
+	"Status-KLINGELSPERRE") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/system/ring_block.lua?sid=$SID\n"
+					status=$($WEBCLIENT "$FritzBoxURL/system/ring_block.lua?sid=$SID" | grep 'night_time_control_enabled' | grep -Eo "=.{3}" | sed -e 's/\"//g' -e 's/= //')
+					if [ "$status" = "1" ] ; then 
+						Debugmsg=$Debugmsg"Status-KLINGELSPERRE: an\n"
+						SetCCUVariable $2 "1"
+					else
+						Debugmsg=$Debugmsg"Status-KLINGELSPERRE: aus\n"
+						SetCCUVariable $2 "0"
+					fi
+					;;
+	"Status-Verbindung") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/internet/inetstat_monitor.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/internet/inetstat_monitor.lua?sid=$SID" | grep 'connection0:status/ip')
+					if echo $status | grep -q '"-"' ; then 
+						Debugmsg=$Debugmsg"Status-Verbindung: nicht verbunden\n"
+						SetCCUVariable $2 "0"
+					else
+						Debugmsg=$Debugmsg"Status-Verbindung: verbunden\n"
+						SetCCUVariable $2 "1"
+					fi
+					;;
+	"Status-Verbindungszeit") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/internet/inetstat_monitor.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/internet/inetstat_monitor.lua?sid=$SID" | grep "connection0:status/conntime_date" -A1)
+					status2=$(echo -e $status | sed -e 's/"connection0:status\/conntime_date"//;s/"connection0:status\/conntime_time"//;s/\[\] =//g;s/"//g;s/,//g;s/\n//g;s/^ //g;s/ / /g;s/\./-/g;s/ /%20/g' | sed ':a;N;$!ba;s/\n//g')
+					if echo $status2 | grep -q '\"-\"' ; then 
+						Debugmsg=$Debugmsg"Status-Verbundindungszeit: - \n"
+						SetCCUVariable $2 "-"
+					else
+						Debugmsg=$Debugmsg"Status-Verbundindungszeit: $status2 \n"
+						SetCCUVariable $2 "$status2"
+					fi
+					Debugmsg=$Debugmsg"Status-Verbundindungszeit: $status2\n"					
+					;;					
+	"Status-WLAN") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/wlan/wlan_settings.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/wlan/wlan_settings.lua?sid=$SID" | grep 'id="uiView_Active" name="active"')
+					if echo $status | grep -q 'name="active" checked>' ; then
+						Debugmsg=$Debugmsg"Status-WLAN: WLAN an\n"
+						SetCCUVariable $2 "1"
+					else
+						Debugmsg=$Debugmsg"Status-WLAN: WLAN aus\n"
+						SetCCUVariable $2 "0"
+					fi
+					;;
+	"Status-WLANGast") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/wlan/wlan_settings.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/wlan/wlan_settings.lua?sid=$SID" | grep 'wlan:settings/guest_ap_enabled')
+					if echo $status | grep -q '= "1"' ; then
+						Debugmsg=$Debugmsg"Status-WLANGast: an\n"
+						SetCCUVariable $2 "1"
+					else
+						Debugmsg=$Debugmsg"Status-WLANGast: aus\n"
+						SetCCUVariable $2 "0"
+					fi
+					;;
+	"Status-WLANZeitschaltung") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/system/wlan_night.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/system/wlan_night.lua?sid=$SID" | grep 'name="active" id="uiActive"')
+					if echo $status | grep -q 'id="uiActive" checked>' ; then
+						Debugmsg=$Debugmsg"Status-WLANZeitschaltung: an\n"
+						SetCCUVariable $2 "1"
+					else
+						Debugmsg=$Debugmsg"Status-WLANZeitschaltung: aus\n"
+						SetCCUVariable $2 "0"
+					fi
+					;;
+	"Status-Rufumleitung") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/fon_num/rul_list.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/fon_num/rul_list.lua?sid=$SID" | grep '"telcfg:settings/CallerIDActions' -A1)
+					if echo $status | grep -q '\[1\]' ; then
+						Debugmsg=$Debugmsg"Status-Rufumleitung: aktiv\n"
+						SetCCUVariable $2 "1"
+					else
+						Debugmsg=$Debugmsg"Status-WLANZeitschaltung: inaktiv\n"
+						SetCCUVariable $2 "0"
+					fi
+					;;
 	"reboot") 		LOGIN
 					PerformPOST "logic:command/reboot=../gateway/commands/saveconfig.html&sid=$SID" "POST" 
 					PerformPOST "security:command/logout=1&sid=$SID" "POST";;
@@ -286,6 +404,16 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT200Energie [Nummer des Aktors:16|17|18|19] [Name der Variable in der CCU] - Beispiel: FritzBox.sh DECT200Energie 16 DECT200 \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh Anrufliste \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh Anrufliste2CCU [0000(HOMEMATIC Webmatic SYSVAR ID)] [Anzahl Eintraege] \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-Rufumleitung [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-Rufumleitung RufumleitungVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-DECT [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-DECT DECTanausVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-DECT200 [16|17|18|19] [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-DECT200 16 DECT16VariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-IP [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh SStatus-IP ExterneIPVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-KLINGELSPERRE [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-KLINGELSPERRE KLINGELSPERREVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-Verbindung [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-Verbindung InternetverbundenVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-Verbindungszeit [Name der logischen Variable (Zeichenkette)in der CCU] Beispiel: FritzBox.sh Status-Verbindungszeit InternetVerbindungszeitVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-WLAN [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-WLAN WLANanausVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-WLANGast [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh SStatus-WLANGast WLANGastanausVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-WLANZeitschaltung  [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-WLANZeitschaltung WLANZeitschaltungVariableCCU \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh reboot \n"
 					EndFritzBoxSkript 4 "Falscher-Parameter-Aufruf-$1-$2-$3-$4";;
 esac
