@@ -112,11 +112,9 @@ LOGIN(){
 
 SetCCUVariable(){
 	Debugmsg=$Debugmsg"SetCCUVariable $1 $2 \n"
-	Debugmsg=$Debugmsg"http://$HOMEMATIC:8181/test.exe?Status=dom.GetObject%28%27"$1"%27%29.State%28"$2"%29 \n"
-	
-	$WEBCLIENT "http://$HOMEMATIC:8181/test.exe?Status=dom.GetObject%28%27"$1"%27%29.State%28"$2"%29"
+	Debugmsg=$Debugmsg"http://127.0.0.1:8181/test.exe?Status=dom.GetObject%28%27"$1"%27%29.State%28"$2"%29 \n"
+	$WEBCLIENT "http://127.0.0.1:8181/test.exe?Status=dom.GetObject%28%27"$1"%27%29.State%28"$2"%29"
 }
-
 
 # Lese CONFIGFILE und ersetzen KEY: Value
 eval `sed '/^ *#/d;s/:/ /;' < "$CONFIGFILE" | while read key val
@@ -176,10 +174,10 @@ case $1 in
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
 						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 erkannt\n"
-						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+						SetCCUVariable $3 "1"
 					else
 						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 nicht erkannt\n"
-						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+						SetCCUVariable $3 "0"
 					fi
 					Debugmsg=$Debugmsg"Alle WLAN-Geräte: $anwesenheit \n"
 					;;
@@ -189,10 +187,10 @@ case $1 in
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
 						Debugmsg=$Debugmsg"LAN-Anwesend: $2 erkannt\n"
-						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"1\")"
+						SetCCUVariable $3 "1"
 					else
 						Debugmsg=$Debugmsg"LAN-Anwesend: $2 nicht erkannt\n"
-						$WEBCLIENT "http://$HOMEMATIC:8181/loksoft.exe?ret=dom.GetObject(\"$3\").State(\"0\")"
+						SetCCUVariable $3 "0"
 					fi
 					Debugmsg=$Debugmsg"Alle LAN-Geräte: $anwesenheit \n"
 					;;
