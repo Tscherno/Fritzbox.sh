@@ -94,5 +94,7 @@ Folgende Funktionen stehen momentan zur Verfügung:
         Status-WLANGast [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh SStatus-WLANGast WLANGastanausVariableCCU 
         Status-WLANZeitschaltung  [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-WLANZeitschaltung WLANZeitschaltungVariableCCU  
         Weckruf [0|1|2] [0|1] - Beispiel: Schaltet den ersten Weckruf ein  FritzBox.sh Weckruf 0 1  
-		Status-Weckruf [0|1|2] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh Status-Weckruf 0 CCUvarWeckruf1  		
+        Status-Weckruf [0|1|2] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh Status-Weckruf 0 CCUvarWeckruf1
         reboot    Startet die Fritzbox neu  
+	
+	
