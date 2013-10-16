@@ -378,8 +378,21 @@ case $1 in
 						Debugmsg=$Debugmsg"Status-Rufumleitung: aktiv\n"
 						SetCCUVariable $2 "1"
 					else
-						Debugmsg=$Debugmsg"Status-WLANZeitschaltung: inaktiv\n"
+						Debugmsg=$Debugmsg"Status-Rufumleitung: inaktiv\n"
 						SetCCUVariable $2 "0"
+					fi
+					;;
+	"Weckruf") 		LOGIN 
+					PerformPOST "telcfg:settings/AlarmClock$2/Active=$3&sid=$SID" "POST";;	
+	"Status-Weckruf") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/fon_devices/alarm.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/fon_devices/alarm.lua?sid=$SID&tab=$2" | grep "telcfg:settings/AlarmClock$2/Active")
+					if echo $status | grep -q '"1"' ; then
+						Debugmsg=$Debugmsg"Status-Weckruf: aktiv\n"
+						SetCCUVariable $3 "1"
+					else
+						Debugmsg=$Debugmsg"Status-Weckruf: inaktiv\n"
+						SetCCUVariable $3 "0"
 					fi
 					;;
 	"reboot") 		LOGIN
@@ -417,6 +430,8 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-WLAN [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-WLAN WLANanausVariableCCU \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-WLANGast [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh SStatus-WLANGast WLANGastanausVariableCCU \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-WLANZeitschaltung  [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-WLANZeitschaltung WLANZeitschaltungVariableCCU \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Weckruf [0|1|2] [0|1] - Beispiel: Schaltet den ersten Weckruf ein  FritzBox.sh Weckruf 0 1 \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-Weckruf [0|1|2] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh Status-Weckruf 0 CCUvarWeckruf1 \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh reboot \n"
 					EndFritzBoxSkript 4 "Falscher-Parameter-Aufruf-$1-$2-$3-$4";;
 esac
