@@ -1,8 +1,8 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.7.1
+# Version 0.7.3
 # https://github.com/Tscherno/Fritzbox.sh
-# Status-Abfragen + Status WLANGast + IP + ExterneVerbindung + Verbindungszeit
+# Weckruf und Status
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
