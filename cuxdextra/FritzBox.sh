@@ -1,8 +1,8 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.7.3
+# Version 0.7.4
 # https://github.com/Tscherno/Fritzbox.sh
-# Weckruf und Status
+# Status-AB
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
