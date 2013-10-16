@@ -239,6 +239,17 @@ case $1 in
 					;;
 	 "AB") 			LOGIN 
 					PerformPOST "tam:settings/TAM$2/Active=$3&sid=$SID" "POST";;
+	"Status-AB") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/fon_devices/tam_list.lua?sid=$SID \n"
+					status=$($WEBCLIENT "$FritzBoxURL/fon_devices/tam_list.lua?sid=$SID" | grep '"Active"' -B1 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "\[$2\]" -A1)
+					if echo $status | grep -q "Active = 1" ; then 
+						Debugmsg=$Debugmsg"Status-AB: $2 aktiv\n"
+						SetCCUVariable $3 "1"
+					else
+						Debugmsg=$Debugmsg"Status-AB: $2 deaktiviert\n"
+						SetCCUVariable $3 "0"
+					fi
+					;;
 	"Anrufliste") 	LOGIN
 					$WEBCLIENT "$FritzBoxURL/fon_num/foncalls_list.lua?sid=$SID&csv="  "$FritzBoxU RL/fon_num/foncalls_list.lua?sid=$SID&csv=" >$ANRUFLIST 
 					;;
@@ -418,6 +429,7 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT200 [16|17|18|19] [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT200Energie [Nummer des Aktors:16|17|18|19] [Name der Variable in der CCU] - Beispiel: FritzBox.sh DECT200Energie 16 DECT200 \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh AB [0|1|2...-9] [0|1] - Beispiel schaltet den 2. AB ein: FritzBox.sh AB 1 1\n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-AB [1|2...-10] [Name der logischen Variable (Bool)in der CCU] - Beispiel Status 2. AB : FritzBox.sh Status-AB 2 CCUVariableAB2 \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh Anrufliste \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh Anrufliste2CCU [0000(HOMEMATIC Webmatic SYSVAR ID)] [Anzahl Eintraege] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh Status-Rufumleitung [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-Rufumleitung RufumleitungVariableCCU \n"

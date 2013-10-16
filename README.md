@@ -80,7 +80,8 @@ Folgende Funktionen stehen momentan zur Verfügung:
         Diversity [0|1|2|3(Rufumleistung)] [0|1]     Konfiguriert eine Rufumleitung
         DECT200 [16|17|18|19] [0|1]     Schaltet DECT200 Geraete ein bzw. aus
         DECT200Energie [Nummer des Aktors:16|17|18|19] [Name der Variable in der CCU] - Beispiel: FritzBox.sh DECT200Energie 16 DECT200     
-        AB [0|1|2...-9] [0|1] - Beispiel schaltet den 2. AB ein: FritzBox.sh AB 1 1
+        AB [0|1|2...-9] [0|1] - Beispiel schaltet den 2. AB ein: FritzBox.sh AB 1 1  
+		Status-AB [1|2...-10] [Name der logischen Variable (Bool)in der CCU] - Beispiel Status 2. AB : FritzBox.sh Status-AB 2 CCUVariableAB2  
         Anrufliste     Erstellt eine Anrufliste fuer Webmatic
         Anrufliste2CCU [0000(HOMEMATIC Webmatic SYSVAR ID)] [Anzahl Eintraege]    Erstellt eine Anrufliste in eine CCU-Variable
         Status-Rufumleitung [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-Rufumleitung RufumleitungVariableCCU 
@@ -94,7 +95,7 @@ Folgende Funktionen stehen momentan zur Verfügung:
         Status-WLANGast [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh SStatus-WLANGast WLANGastanausVariableCCU 
         Status-WLANZeitschaltung  [Name der logischen Variable (Bool)in der CCU] Beispiel: FritzBox.sh Status-WLANZeitschaltung WLANZeitschaltungVariableCCU  
         Weckruf [0|1|2] [0|1] - Beispiel: Schaltet den ersten Weckruf ein  FritzBox.sh Weckruf 0 1  
-        Status-Weckruf [0|1|2] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh Status-Weckruf 0 CCUvarWeckruf1
+        Status-Weckruf [0|1|2] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh Status-Weckruf 0 CCUvarWeckruf1  
         reboot    Startet die Fritzbox neu  
 	
 	
