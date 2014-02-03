@@ -57,8 +57,13 @@ in das Verzeichnis /usr/local/addons/cuxd/extra kopieren.
    SWITCH|CMD_LONG      sh /usr/local/addons/cuxd/extra/FritzBox.sh WLANGast 1	 	   
    SWITCH|EXEC_TIMEOUT  5    
 
-7. Für die Anruflistenanzeige in Webmatic die Dateien aus dem Verzeichnis `webmatic` 
-   nach `/usr/local/etc/config/addons/www/webmatic_user` kopieren
+7. Falls Anruflistenanzeige in Webmatic angezeigt werden soll:  
+   a) Für die Anruflistenanzeige in Webmatic die Dateien aus dem Verzeichnis `webmatic` nach `/usr/local/etc/config/addons/www/webmatic_user` kopieren  
+   b) Folgende Zeile in den `<HEAD>` der index.html eingefügen:   
+      `<link rel="stylesheet" href="../webmatic_user/fritz.css" />`   
+   c) Variable auf der CCU mit `(r)` in der Beschreibung erstellen  
+   d) Script entsprechend aufrufen  
+   
 
 ##Funktionen
 Folgende Funktionen stehen momentan zur Verfügung:   
