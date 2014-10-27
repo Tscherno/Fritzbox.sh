@@ -1,8 +1,8 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.7.4
+# Version 0.7.5
 # https://github.com/Tscherno/Fritzbox.sh
-# Status-AB
+# Anwesend Fritz.box Firmware 6.20
 # ----------------------------------------------------------------------
 
 CPWMD5=./cpwmd5
