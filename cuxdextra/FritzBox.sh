@@ -176,7 +176,7 @@ case $1 in
 					PerformPOST "wlan:settings/night_time_control_no_forced_off=$2&sid=$SID" "POST";;
 	"WLANAnwesend") LOGIN
 					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
-					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 1" -B11 | grep "online = 1" -B1 |grep name | sed -e 's/name =//' -e 's/,//')
+					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 1" -B15 | grep "online = 1" -B1 |grep name | sed -e 's/name =//' -e 's/,//')
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
 						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 erkannt\n"
@@ -189,7 +189,7 @@ case $1 in
 					;;
 	"LANAnwesend") 	LOGIN
 					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
-					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 0" -B11 | grep "online = 1" -B1 | grep name | sed -e 's/name =//' -e 's/,//')
+					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 0" -B15 | grep "online = 1" -B1 | grep name | sed -e 's/name =//' -e 's/,//')
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
 						Debugmsg=$Debugmsg"LAN-Anwesend: $2 erkannt\n"
