@@ -176,6 +176,19 @@ case $1 in
 					PerformPOST "wlan:settings/night_time_control_no_forced_off=$2&sid=$SID" "POST";;
 	"WLANAnwesend") LOGIN
 					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
+					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 1" -B15 | grep "active = 1" -A15 |grep name | sed -e 's/name =//' -e 's/,//')
+					anwesenheit1=$(echo $anwesenheit | grep "$2" )
+					if [ "$anwesenheit1" != "" ]; then
+						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 erkannt\n"
+						SetCCUVariable $3 "1"
+					else
+						Debugmsg=$Debugmsg"WLAN-Anwesend: $2 nicht erkannt\n"
+						SetCCUVariable $3 "0"
+					fi
+					Debugmsg=$Debugmsg"Alle WLAN-Geräte: $anwesenheit \n"
+					;;
+	"WLANOnline") LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
 					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 1" -B15 | grep "online = 1" -B1 |grep name | sed -e 's/name =//' -e 's/,//')
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
 					if [ "$anwesenheit1" != "" ]; then
@@ -188,6 +201,19 @@ case $1 in
 					Debugmsg=$Debugmsg"Alle WLAN-Geräte: $anwesenheit \n"
 					;;
 	"LANAnwesend") 	LOGIN
+					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
+					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 0" -B15 | grep "active = 1" -A15 | grep name | sed -e 's/name =//' -e 's/,//')
+					anwesenheit1=$(echo $anwesenheit | grep "$2" )
+					if [ "$anwesenheit1" != "" ]; then
+						Debugmsg=$Debugmsg"LAN-Anwesend: $2 erkannt\n"
+						SetCCUVariable $3 "1"
+					else
+						Debugmsg=$Debugmsg"LAN-Anwesend: $2 nicht erkannt\n"
+						SetCCUVariable $3 "0"
+					fi
+					Debugmsg=$Debugmsg"Alle LAN-Geräte: $anwesenheit \n"
+					;;
+	"LANOnline") 	LOGIN
 					Debugmsg=$Debugmsg"URL: $FritzBoxURL/net/network_user_devices.lua?sid=$SID \n"
 					anwesenheit=$($WEBCLIENT "$FritzBoxURL/net/network_user_devices.lua?sid=$SID" | grep '"_node"] = "landevice' -A27 -B2 | sed -e 's/\["//g' -e 's/\"]//g' -e 's/\"//g' | grep "wlan = 0" -B15 | grep "online = 1" -B1 | grep name | sed -e 's/name =//' -e 's/,//')
 					anwesenheit1=$(echo $anwesenheit | grep "$2" )
@@ -417,7 +443,9 @@ case $1 in
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANGast [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANNacht [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANAnwesend [Name des WLAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh WLANAnwesend Geraet CCUVariable \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh WLANOnline [Name des WLAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh WLANOnline Geraet CCUVariable \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh LANAnwesend [Name des LAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh LANAnwesend Geraet CCUVariable \n"
+					Debugmsg=$Debugmsg"        ./FritzBox.sh LANOnline [Name des LAN Geraetes] [Name der logischen Variable (Bool)in der CCU] - Beispiel: FritzBox.sh LANOnline Geraet CCUVariable \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh WakeOnLan [Name des LAN Geraetes] - Beispiel: FritzBox.sh WakeOnLan Geraetename \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh DECT [0|1] \n"
 					Debugmsg=$Debugmsg"        ./FritzBox.sh UMTS [0|1] \n"
