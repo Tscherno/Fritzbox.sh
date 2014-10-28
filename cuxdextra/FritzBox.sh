@@ -1,6 +1,6 @@
 #!/bin/bash
 # FritzBox.sh
-# Version 0.7.5
+# Version 0.7.6
 # https://github.com/Tscherno/Fritzbox.sh
 # Anwesend Fritz.box Firmware 6.20
 # ----------------------------------------------------------------------
